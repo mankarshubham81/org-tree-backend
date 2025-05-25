@@ -1,12 +1,29 @@
-const Employee = require("../models/employee.model");
+// controllers/employeeController.js
+const Employee = require('../models/employee.model');
+const cloudinary = require('../config/cloudinary');
+const streamifier = require('streamifier');
 
 // Add new employee
 const addEmployee = async (req, res) => {
   try {
     const { name, designation, dob, experience, reportingManager } = req.body;
-
     if (!name || !designation || !dob || !experience) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    // Upload to Cloudinary if file provided
+    let imageUrl = '';
+    if (req.file) {
+      imageUrl = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: 'employee_images' },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result.secure_url);
+          }
+        );
+        streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+      });
     }
 
     const newEmployee = new Employee({
@@ -15,7 +32,7 @@ const addEmployee = async (req, res) => {
       dob,
       experience,
       reportingManager: reportingManager || null,
-      image: req.file ? `/uploads/${req.file.filename}` : "",
+      image: imageUrl,
     });
 
     const saved = await newEmployee.save();
@@ -26,14 +43,13 @@ const addEmployee = async (req, res) => {
 };
 
 // Build tree structure recursively
-const buildTree = (employees, managerId = null) => {
-  return employees
+const buildTree = (employees, managerId = null) =>
+  employees
     .filter(emp => String(emp.reportingManager) === String(managerId))
     .map(emp => ({
       ...emp._doc,
       children: buildTree(employees, emp._id),
     }));
-};
 
 // Get org tree
 const getOrgTree = async (req, res) => {
