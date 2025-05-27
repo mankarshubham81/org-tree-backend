@@ -77,10 +77,6 @@ org-tree-backend/
 
    The API will be available at `http://localhost:4000/api/employees`
 
-// 5. **Seed sample data** (optional)
-//  ```bash
-// //  node seed.js
-   ```
 
 ---
 
@@ -110,18 +106,6 @@ Fields:
 Response: `201 Created` with JSON of the new employee.
 
 ---
-
-// ## 🔧 Seed Script
-
-//The `seed.js` script clears the `employees` collection and inserts sample data with a hierarchy.
-
-// ```bash
-// node seed.js
-// ```
-
-// Customize `seed.js` to adjust sample names, designations, and reporting relationships.
-
-// ---
 
 ## 📄 License
 
