@@ -10,7 +10,6 @@ Node.js + Express API for managing an organizational chart, with MongoDB (Mongoo
 * **Hierarchical Data**: Builds a nested tree of employees based on reporting manager.
 * **File Upload**: Accepts profile images (PNG, JPG, JPEG) with size validation (max 1 MB).
 * **Data Validation & Error Handling**: Ensures required fields and returns clear HTTP status codes.
-* **Seed Data**: Optional `seed.js` for populating sample employees.
 
 ---
 
